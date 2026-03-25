@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THE ALLPROPAY AGENCY — Command Center</title>
+<title>THE ALLPROPAY AGENCY &mdash; Command Center</title>
 <style>
   :root {
     --cyan: #00e5ff;
@@ -952,7 +952,7 @@
     </svg>
     <div>
       <div class="logo-text">AllProPay Agency</div>
-      <div class="logo-sub">Command Center — Operational</div>
+      <div class="logo-sub">Command Center &mdash; Operational</div>
     </div>
   </div>
   <div class="header-time">
@@ -998,14 +998,14 @@
 
   <!-- OFFICE FLOOR -->
   <div class="office-floor">
-    <div class="office-floor-label">◈ AGENCY FLOOR — LIVE VIEW</div>
+    <div class="office-floor-label">◈ AGENCY FLOOR &mdash; LIVE VIEW</div>
 
     <!-- SVG Lines Canvas -->
     <svg class="lines-canvas" id="lines-canvas"></svg>
 
     <div class="agent-grid" id="agent-grid">
 
-      <!-- SCOUT — Top Left -->
+      <!-- SCOUT &mdash; Top Left -->
       <div class="station" data-pos="tl" data-agent="SCOUT" id="station-scout">
         <div class="station-card working">
           <div class="agent-figure">
@@ -1047,7 +1047,7 @@
         </div>
       </div>
 
-      <!-- CIPHER — Top Center -->
+      <!-- CIPHER &mdash; Top Center -->
       <div class="station" data-pos="tc" data-agent="CIPHER" id="station-cipher">
         <div class="station-card complete">
           <div class="agent-figure">
@@ -1077,14 +1077,14 @@
           <div class="station-footer">
             <div class="status-badge complete">
               <div class="status-light complete"></div>
-              ✓ Complete
+              &#10003; Complete
             </div>
             <div class="tasks-done">Today: <span>3</span></div>
           </div>
         </div>
       </div>
 
-      <!-- FORGE — Top Right -->
+      <!-- FORGE &mdash; Top Right -->
       <div class="station" data-pos="tr" data-agent="FORGE" id="station-forge">
         <div class="station-card working">
           <div class="agent-figure">
@@ -1122,7 +1122,7 @@
         </div>
       </div>
 
-      <!-- MAX — CENTER -->
+      <!-- MAX &mdash; CENTER -->
       <div class="station max-station" data-agent="MAX" id="station-max">
         <div class="station-card max-card">
           <div style="display:flex; align-items:center; gap:16px; margin-bottom:12px;">
@@ -1181,13 +1181,13 @@
           </div>
 
           <div class="mission-log">
-            <div class="mission-log-header">Mission Log — Live</div>
+            <div class="mission-log-header">Mission Log &mdash; Live</div>
             <div class="mission-log-body" id="mission-log"></div>
           </div>
         </div>
       </div>
 
-      <!-- RELAY — Bottom Left -->
+      <!-- RELAY &mdash; Bottom Left -->
       <div class="station" data-pos="bl" data-agent="RELAY" id="station-relay">
         <div class="station-card idle">
           <div class="agent-figure">
@@ -1290,26 +1290,26 @@
 </div>
 
 <!-- FOOTER -->
-<div class="footer">AllProPay Agency Command Center — All Systems Operational — © 2026 AllProPay</div>
+<div class="footer">AllProPay Agency Command Center &mdash; All Systems Operational &mdash; &copy; 2026 AllProPay</div>
 
 <!-- DEPLOY MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalIfBg(event)">
   <div class="modal">
     <div class="modal-header">
       <span class="modal-title">⚡ Deploy Agent</span>
-      <button class="modal-close" onclick="closeModal()">×</button>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">Agent Designation</label>
         <select class="form-select" id="deploy-agent">
-          <option value="">— Select Agent —</option>
-          <option>SCOUT — Sales / Data</option>
-          <option>FORGE — Build / Dev</option>
-          <option>CIPHER — Research</option>
-          <option>RELAY — Content</option>
-          <option>DISPATCH — Ops</option>
-          <option>NEW AGENT — Custom</option>
+          <option value="">&mdash; Select Agent &mdash;</option>
+          <option>SCOUT &mdash; Sales / Data</option>
+          <option>FORGE &mdash; Build / Dev</option>
+          <option>CIPHER &mdash; Research</option>
+          <option>RELAY &mdash; Content</option>
+          <option>DISPATCH &mdash; Ops</option>
+          <option>NEW AGENT &mdash; Custom</option>
         </select>
       </div>
       <div class="form-group">
@@ -1362,17 +1362,17 @@ updateClock();
 // MISSION LOG
 // ============================================================
 const logEntries = [
-  { time: '09:14', agent: 'FORGE', msg: 'Initialized proposal generator — schema loaded' },
+  { time: '09:14', agent: 'FORGE', msg: 'Initialized proposal generator &mdash; schema loaded' },
   { time: '09:22', agent: 'CIPHER', msg: 'Vertical analysis complete: payroll, dental, auto' },
   { time: '09:31', agent: 'SCOUT', msg: 'Pulled 847 merchant records from HubSpot CRM' },
   { time: '09:38', agent: 'DISPATCH', msg: 'Segmented 232K leads into 14 industry buckets' },
-  { time: '09:45', agent: 'CIPHER', msg: 'Competitor pricing matrix compiled — 6 processors' },
-  { time: '09:52', agent: 'RELAY', msg: 'Morning brief template drafted — awaiting review' },
+  { time: '09:45', agent: 'CIPHER', msg: 'Competitor pricing matrix compiled &mdash; 6 processors' },
+  { time: '09:52', agent: 'RELAY', msg: 'Morning brief template drafted &mdash; awaiting review' },
   { time: '10:03', agent: 'MAX', msg: 'Directive issued: prioritize proposal tool + lead campaign' },
   { time: '10:11', agent: 'FORGE', msg: 'Building UI components for proposal generator v0.2' },
-  { time: '10:19', agent: 'CIPHER', msg: 'Lead gen vertical report — 3 reports complete' },
+  { time: '10:19', agent: 'CIPHER', msg: 'Lead gen vertical report &mdash; 3 reports complete' },
   { time: '10:27', agent: 'SCOUT', msg: 'Compensation analysis: avg interchange spread 0.42%' },
-  { time: '10:35', agent: 'DISPATCH', msg: 'Campaign sequences mapped — Zoho integration in queue' },
+  { time: '10:35', agent: 'DISPATCH', msg: 'Campaign sequences mapped &mdash; Zoho integration in queue' },
   { time: '10:44', agent: 'MAX', msg: 'Status check: 3 active, 1 standby, all on directive' },
 ];
 
@@ -1400,10 +1400,10 @@ setInterval(addLogEntry, 5000);
 // ============================================================
 const activities = [
   { color: 'green', time: '10:44', text: '<strong>DISPATCH</strong> mapped 14 campaign sequences from lead segments' },
-  { color: 'cyan', time: '10:38', text: '<strong>CIPHER</strong> completed vertical research — 3 reports filed' },
+  { color: 'cyan', time: '10:38', text: '<strong>CIPHER</strong> completed vertical research &mdash; 3 reports filed' },
   { color: 'green', time: '10:31', text: '<strong>FORGE</strong> committed proposal tool v0.2 components' },
-  { color: 'gold', time: '10:22', text: '<strong>MAX</strong> issued updated directive: lead campaign priority ↑' },
-  { color: 'cyan', time: '10:11', text: '<strong>SCOUT</strong> analyzed 847 merchant records — avg spread 0.42%' },
+  { color: 'gold', time: '10:22', text: '<strong>MAX</strong> issued updated directive: lead campaign priority &uarr;' },
+  { color: 'cyan', time: '10:11', text: '<strong>SCOUT</strong> analyzed 847 merchant records &mdash; avg spread 0.42%' },
   { color: 'green', time: '09:52', text: '<strong>RELAY</strong> morning brief template drafted and staged' },
 ];
 
@@ -1510,7 +1510,7 @@ function deployAgent() {
     return;
   }
   const btn = document.querySelector('.btn-deploy');
-  btn.textContent = '✓ Deployed!';
+  btn.textContent = '&#10003; Deployed!';
   btn.style.borderColor = 'var(--green)';
   btn.style.color = 'var(--green)';
   setTimeout(() => {
@@ -1522,7 +1522,7 @@ function deployAgent() {
     document.getElementById('deploy-task').value = '';
 
     // Add to activity feed
-    const agentName = agent.split(' — ')[0];
+    const agentName = agent.split(' &mdash; ')[0];
     const div = document.createElement('div');
     div.className = 'feed-item';
     const now = new Date();
@@ -1530,7 +1530,7 @@ function deployAgent() {
     div.innerHTML = `
       <div class="feed-dot gold"></div>
       <span class="feed-time">${t}</span>
-      <span class="feed-text"><strong>MAX → ${agentName}</strong> ${task.slice(0,60)}${task.length>60?'...':''}</span>
+      <span class="feed-text"><strong>MAX &rarr; ${agentName}</strong> ${task.slice(0,60)}${task.length>60?'...':''}</span>
     `;
     feedEl.insertBefore(div, feedEl.firstChild);
     while (feedEl.children.length > 6) feedEl.removeChild(feedEl.lastChild);
