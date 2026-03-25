@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AllProPay — Campaign Builder</title>
+<title>AllProPay &mdash; Campaign Builder</title>
 <style>
   :root {
     --navy: #0a1628;
@@ -246,7 +246,7 @@
     border-color: var(--blue);
   }
   .check-item.checked .check-dot::after {
-    content: '✓';
+    content: '&#10003;';
     font-size: 9px;
     color: white;
     font-weight: 900;
@@ -759,10 +759,10 @@
                 <div class="check-dot"></div><span class="check-label">&lt;$500K</span>
               </div>
               <div class="check-item" onclick="toggleCheck(this,'500K-1M')">
-                <div class="check-dot"></div><span class="check-label">$500K–1M</span>
+                <div class="check-dot"></div><span class="check-label">$500K&ndash;1M</span>
               </div>
               <div class="check-item" onclick="toggleCheck(this,'1M-5M')">
-                <div class="check-dot"></div><span class="check-label">$1M–5M</span>
+                <div class="check-dot"></div><span class="check-label">$1M&ndash;5M</span>
               </div>
               <div class="check-item" onclick="toggleCheck(this,'5M+')">
                 <div class="check-dot"></div><span class="check-label">$5M+</span>
@@ -773,16 +773,16 @@
             <label>Employee Count</label>
             <div class="checkbox-grid">
               <div class="check-item" onclick="toggleCheck(this,'1-4')">
-                <div class="check-dot"></div><span class="check-label">1–4 emp</span>
+                <div class="check-dot"></div><span class="check-label">1&ndash;4 emp</span>
               </div>
               <div class="check-item" onclick="toggleCheck(this,'5-9')">
-                <div class="check-dot"></div><span class="check-label">5–9 emp</span>
+                <div class="check-dot"></div><span class="check-label">5&ndash;9 emp</span>
               </div>
               <div class="check-item" onclick="toggleCheck(this,'10-19')">
-                <div class="check-dot"></div><span class="check-label">10–19 emp</span>
+                <div class="check-dot"></div><span class="check-label">10&ndash;19 emp</span>
               </div>
               <div class="check-item" onclick="toggleCheck(this,'20-49')">
-                <div class="check-dot"></div><span class="check-label">20–49 emp</span>
+                <div class="check-dot"></div><span class="check-label">20&ndash;49 emp</span>
               </div>
               <div class="check-item" onclick="toggleCheck(this,'50+')">
                 <div class="check-dot"></div><span class="check-label">50+ emp</span>
@@ -872,12 +872,12 @@
         <div class="card">
           <div class="card-title"><span class="icon">📊</span> Estimated Campaign Size</div>
           <div class="summary-big">
-            <div class="num" id="est-count">—</div>
+            <div class="num" id="est-count">&mdash;</div>
             <div class="lbl">estimated records match your filters</div>
           </div>
           <div class="summary-stats">
             <div class="stat-box">
-              <div class="n" id="est-days">—</div>
+              <div class="n" id="est-days">&mdash;</div>
               <div class="l">calling days</div>
             </div>
             <div class="stat-box">
@@ -889,7 +889,7 @@
               <div class="l">dials/day</div>
             </div>
             <div class="stat-box">
-              <div class="n" id="est-states">—</div>
+              <div class="n" id="est-states">&mdash;</div>
               <div class="l">states selected</div>
             </div>
           </div>
@@ -898,7 +898,7 @@
           <div class="tz-bars" id="tz-breakdown" style="margin-top:16px;"></div>
 
           <div id="compliance-note" class="alert alert-info" style="margin-top:16px;display:none;">
-            ⏰ <strong>Calling Hours Reminder:</strong> ET (8am–9pm), CT (7am–8pm your time), MT (6am–7pm), PT (5am–6pm)
+            ⏰ <strong>Calling Hours Reminder:</strong> ET (8am&ndash;9pm), CT (7am&ndash;8pm your time), MT (6am&ndash;7pm), PT (5am&ndash;6pm)
           </div>
         </div>
 
@@ -909,7 +909,7 @@
             <div>
               <label>Assign to Opener</label>
               <select id="assign-opener">
-                <option value="">— Select Opener —</option>
+                <option value="">&mdash; Select Opener &mdash;</option>
                 <option>Kurt</option>
                 <option>John</option>
                 <option>Katie</option>
@@ -941,10 +941,10 @@
 
         <!-- Script Preview -->
         <div class="card" id="script-preview-card" style="display:none;">
-          <div class="card-title"><span class="icon">📜</span> Google Apps Script — Ready to Copy</div>
+          <div class="card-title"><span class="icon">📜</span> Google Apps Script &mdash; Ready to Copy</div>
           <div class="alert alert-info" style="margin-bottom:12px;">
-            1. Open your Google Sheet → Extensions → Apps Script<br>
-            2. Paste this script → Save → Run <strong>exportCampaign</strong><br>
+            1. Open your Google Sheet &rarr; Extensions &rarr; Apps Script<br>
+            2. Paste this script &rarr; Save &rarr; Run <strong>exportCampaign</strong><br>
             3. A new sheet will be created with your filtered records
           </div>
           <button class="btn btn-teal copy-btn" onclick="copyScript()">📋 Copy Script to Clipboard</button>
@@ -1017,11 +1017,11 @@
         </div>
         <ol style="padding-left:20px;line-height:2;color:var(--text-dim);font-size:13px;">
           <li>Open your Google Sheet with the 232K leads</li>
-          <li>Click <strong style="color:var(--text)">Extensions</strong> → <strong style="color:var(--text)">Apps Script</strong></li>
+          <li>Click <strong style="color:var(--text)">Extensions</strong> &rarr; <strong style="color:var(--text)">Apps Script</strong></li>
           <li>Delete the default <code style="color:var(--teal)">myFunction()</code> code</li>
           <li>Paste in the generated script from the Builder tab</li>
           <li>Click <strong style="color:var(--text)">💾 Save</strong> (Ctrl+S)</li>
-          <li>Click <strong style="color:var(--text)">▶ Run</strong> → select <code style="color:var(--teal)">exportCampaign</code></li>
+          <li>Click <strong style="color:var(--text)">▶ Run</strong> &rarr; select <code style="color:var(--teal)">exportCampaign</code></li>
           <li>Grant permissions when prompted</li>
           <li>A new sheet tab will appear with your filtered list!</li>
         </ol>
@@ -1180,7 +1180,7 @@ const STATES = [
 
 // SIC code lookup for quickpicks
 const QUICKPICK_DATA = {
-  autorepair: { name:'Auto Repair — US', verticals:['Auto Repair'], sic:'7538, 7539, 5571', keywords:'repair,auto,mechanic,automotive' },
+  autorepair: { name:'Auto Repair &mdash; US', verticals:['Auto Repair'], sic:'7538, 7539, 5571', keywords:'repair,auto,mechanic,automotive' },
   tint:       { name:'Tint & Detailing', verticals:['Tint/Detailing'], sic:'7542', keywords:'tint,detail,car wash,polish' },
   hvac:       { name:'HVAC & Plumbing', verticals:['HVAC/Plumbing'], sic:'1711, 7623', keywords:'hvac,plumbing,heating,cooling,air conditioning' },
   restaurant: { name:'Restaurants', verticals:['Restaurant'], sic:'5812, 5813', keywords:'restaurant,food,cafe,diner,bar,grill' },
@@ -1313,8 +1313,8 @@ function updateEstimate() {
   const estimated = Math.round(base * vertMult * revMult * empMult * stateRatio * tzMult);
   const days = estimated > 0 ? Math.ceil(estimated / dialsPerDay) : 0;
 
-  document.getElementById('est-count').textContent = estimated > 0 ? estimated.toLocaleString() : '—';
-  document.getElementById('est-days').textContent = days > 0 ? days.toLocaleString() : '—';
+  document.getElementById('est-count').textContent = estimated > 0 ? estimated.toLocaleString() : '&mdash;';
+  document.getElementById('est-days').textContent = days > 0 ? days.toLocaleString() : '&mdash;';
   document.getElementById('est-states').textContent = selectedStates.size;
 
   // TZ breakdown
@@ -1815,10 +1815,10 @@ function renderQueue() {
         ${c.notes ? `<div style="font-size:11px;color:var(--text-muted);margin-top:2px">${c.notes}</div>` : ''}
         <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${new Date(c.created).toLocaleDateString()}</div>
       </td>
-      <td>${c.verticals.length ? c.verticals.slice(0,2).join(', ')+(c.verticals.length>2?'…':'') : '<span style="color:var(--text-muted)">—</span>'}</td>
+      <td>${c.verticals.length ? c.verticals.slice(0,2).join(', ')+(c.verticals.length>2?'...':'') : '<span style="color:var(--text-muted)">&mdash;</span>'}</td>
       <td>
         <select class="opener-select" onchange="setOpener(${c.id}, this.value)">
-          <option value="">—</option>
+          <option value="">&mdash;</option>
           ${['Kurt','John','Katie','Joy','Mariah','Marelou','New'].map(o=>`<option${c.opener===o?' selected':''}>${o}</option>`).join('')}
         </select>
       </td>
