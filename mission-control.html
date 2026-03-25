@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -530,7 +530,7 @@
     }
 
     .checklist-item input[type="checkbox"]:checked::after {
-      content: '✓';
+      content: '&#10003;';
       position: absolute;
       top: -1px;
       left: 1px;
@@ -806,7 +806,7 @@
     <div class="panel-header">
       <div class="panel-title">
         <span class="dot dot-active"></span>
-        Active — Max Is Working On
+        Active &mdash; Max Is Working On
       </div>
       <span class="panel-count" id="count-active">0</span>
     </div>
@@ -818,7 +818,7 @@
     <div class="panel-header">
       <div class="panel-title">
         <span class="dot dot-queue"></span>
-        Up Next — Queue
+        Up Next &mdash; Queue
       </div>
       <span class="panel-count" id="count-queue">0</span>
     </div>
@@ -931,7 +931,7 @@
     phases: [
       {
         id: 'phase1',
-        name: 'Phase 1 — Operational Foundation',
+        name: 'Phase 1 &mdash; Operational Foundation',
         open: true,
         items: [
           { id: uid(), text: 'Implement transfer routing in Zoho',             done: false },
@@ -949,7 +949,7 @@
       },
       {
         id: 'phase2',
-        name: 'Phase 2 — Scale & Systems',
+        name: 'Phase 2 &mdash; Scale & Systems',
         open: false,
         items: [
           { id: uid(), text: 'Build out Gemini Gem library (all 8 gems)',      done: false },
@@ -961,7 +961,7 @@
       },
       {
         id: 'phase3',
-        name: 'Phase 3 — Growth & Domination',
+        name: 'Phase 3 &mdash; Growth & Domination',
         open: false,
         items: [
           { id: uid(), text: 'Expand to 3 new verticals',                      done: false },
@@ -1068,9 +1068,9 @@
           </div>
         </div>
         <div class="task-actions">
-          <button class="btn-icon complete" title="Mark complete" onclick="completeTask('active','${t.id}')">✓</button>
-          <button class="btn-icon" title="Move to queue" onclick="moveTask('active','queue','${t.id}')">↓</button>
-          <button class="btn-icon delete" title="Delete" onclick="deleteTask('active','${t.id}')">✕</button>
+          <button class="btn-icon complete" title="Mark complete" onclick="completeTask('active','${t.id}')">&#10003;</button>
+          <button class="btn-icon" title="Move to queue" onclick="moveTask('active','queue','${t.id}')">&darr;</button>
+          <button class="btn-icon delete" title="Delete" onclick="deleteTask('active','${t.id}')">&#10005;</button>
         </div>
       </div>
     `).join('');
@@ -1083,7 +1083,7 @@
     const el = document.getElementById('list-queue');
     document.getElementById('count-queue').textContent = state.queue.length;
     if (!state.queue.length) {
-      el.innerHTML = '<div class="empty-state">Queue is empty — good work! &#x2694;&#xFE0F;</div>';
+      el.innerHTML = '<div class="empty-state">Queue is empty &mdash; good work! &#x2694;&#xFE0F;</div>';
       return;
     }
     el.innerHTML = state.queue.map((t, i) => `
@@ -1097,8 +1097,8 @@
         </div>
         <div class="task-actions">
           <button class="btn-icon" title="Move to active" onclick="moveTask('queue','active','${t.id}')">▲</button>
-          <button class="btn-icon complete" title="Mark complete" onclick="completeTask('queue','${t.id}')">✓</button>
-          <button class="btn-icon delete" title="Delete" onclick="deleteTask('queue','${t.id}')">✕</button>
+          <button class="btn-icon complete" title="Mark complete" onclick="completeTask('queue','${t.id}')">&#10003;</button>
+          <button class="btn-icon delete" title="Delete" onclick="deleteTask('queue','${t.id}')">&#10005;</button>
         </div>
       </div>
     `).join('');
@@ -1152,7 +1152,7 @@
           <div class="done-time">Completed at ${fmtTime(t.ts || Date.now())}</div>
         </div>
         <div class="task-actions">
-          <button class="btn-icon delete" title="Remove" onclick="deleteTask('done','${t.id}')">✕</button>
+          <button class="btn-icon delete" title="Remove" onclick="deleteTask('done','${t.id}')">&#10005;</button>
         </div>
       </div>
     `).join('');
