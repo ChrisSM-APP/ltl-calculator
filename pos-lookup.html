@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AllProPay POS Lookup</title>
+  <style>
+    :root {
+      --navy: #0a1f44;
+      --blue: #1a56db;
+      --blue-light: #3b82f6;
+      --green: #16a34a;
+      --green-bg: #dcfce7;
+      --green-border: #86efac;
+      --blue-bg: #dbeafe;
+      --blue-border: #93c5fd;
+      --yellow: #ca8a04;
+      --yellow-bg: #fef9c3;
+      --yellow-border: #fde047;
+      --red: #dc2626;
+      --red-bg: #fee2e2;
+      --red-border: #fca5a5;
+      --gray: #6b7280;
+      --gray-bg: #f9fafb;
+      --text: #111827;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--gray-bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--navy);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: #60a5fa;
+    }
+
+    .tagline {
+      color: #94a3b8;
+      font-size: 12px;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .search-wrap {
+      background: var(--navy);
+      padding: 0 20px 20px;
+      position: sticky;
+      top: 56px;
+      z-index: 99;
+    }
+
+    #search {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 18px;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      background: #0f2d5a;
+      color: white;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #search::placeholder { color: #64748b; }
+
+    #search:focus {
+      border-color: var(--blue-light);
+      background: #0d2550;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1.5px solid #334155;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-weight: 500;
+    }
+
+    .filter-btn:hover { border-color: #60a5fa; color: #60a5fa; }
+
+    .filter-btn.active {
+      background: var(--blue-light);
+      border-color: var(--blue-light);
+      color: white;
+    }
+
+    .filter-btn.f-native.active { background: var(--green); border-color: var(--green); }
+    .filter-btn.f-posplus.active { background: #2563eb; border-color: #2563eb; }
+    .filter-btn.f-gateway.active { background: #d97706; border-color: #d97706; }
+    .filter-btn.f-unsupported.active { background: var(--red); border-color: var(--red); }
+
+    main {
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    #results-count {
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .results-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 900px) {
+      .results-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      border-left: 4px solid #e5e7eb;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+      transition: box-shadow 0.15s, transform 0.15s;
+      cursor: default;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      transform: translateY(-1px);
+    }
+
+    .card.native { border-left-color: var(--green); }
+    .card.posplus { border-left-color: #2563eb; }
+    .card.gateway { border-left-color: #f59e0b; }
+    .card.unsupported { border-left-color: var(--red); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .pos-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .badge-native { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .badge-posplus { background: var(--blue-bg); color: #1d4ed8; border: 1px solid var(--blue-border); }
+    .badge-gateway { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+    .badge-unsupported { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+    .card-processor {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .card-vertical {
+      font-size: 11px;
+      color: var(--gray);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-notes {
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .card-action {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .action-native { background: var(--green-bg); color: var(--green); }
+    .action-posplus { background: var(--blue-bg); color: #1d4ed8; }
+    .action-gateway { background: var(--yellow-bg); color: var(--yellow); }
+    .action-unsupported { background: var(--red-bg); color: var(--red); }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray);
+      grid-column: 1 / -1;
+    }
+
+    .no-results h3 { font-size: 20px; margin-bottom: 8px; color: #374151; }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .dot-native { background: var(--green); }
+    .dot-posplus { background: #2563eb; }
+    .dot-gateway { background: #f59e0b; }
+    .dot-unsupported { background: var(--red); }
+
+    .highlight { background: #fef08a; border-radius: 2px; padding: 0 1px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AllPro<span>Pay</span></div>
+  <div class="tagline">POS Lookup Tool &mdash; Live Call Reference</div>
+</header>
+
+<div class="search-wrap">
+  <input type="search" id="search" placeholder="🔍  Type a POS system name..." autocomplete="off" autocorrect="off" spellcheck="false" />
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn f-native" data-filter="native">🟢 Native</button>
+    <button class="filter-btn f-posplus" data-filter="posplus">🔵 POS+</button>
+    <button class="filter-btn f-gateway" data-filter="gateway">🟡 Gateway</button>
+    <button class="filter-btn f-unsupported" data-filter="unsupported">🔴 Not Supported</button>
+  </div>
+</div>
+
+<main>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot dot-native"></div> Native &mdash; Direct integration</div>
+    <div class="legend-item"><div class="legend-dot dot-posplus"></div> POS+ &mdash; Extension works</div>
+    <div class="legend-item"><div class="legend-dot dot-gateway"></div> Gateway &mdash; Use Authorize.net layer</div>
+    <div class="legend-item"><div class="legend-dot dot-unsupported"></div> Not Supported &mdash; Closed/flat-rate</div>
+  </div>
+
+  <div id="results-count"></div>
+  <div class="results-grid" id="results"></div>
+</main>
+
+<script>
+const POS_DATA = [
+  // ─── NATIVE INTEGRATIONS ───
+  {
+    name: "Toast",
+    processor: "North (NAB)",
+    type: "native",
+    vertical: "Restaurant",
+    notes: "Toast is a North native. Very common in restaurants. Keep their hardware, switch processing.",
+    action: "Board on North (NAB) &mdash; call Jesse"
+  },
+  {
+    name: "SpotOn",
+    processor: "North (NAB)",
+    type: "native",
+    vertical: "Restaurant / Retail",
+    notes: "SpotOn runs on North's backend natively. Straightforward switch.",
+    action: "Board on North (NAB) &mdash; call Jesse"
+  },
+  {
+    name: "Clover",
+    processor: "PayARC",
+    type: "native",
+    vertical: "Restaurant / Retail / Any",
+    notes: "PayARC is a Clover reseller &mdash; they sell and fully support Clover hardware. Hundreds of Clover App Market integrations.",
+    action: "Board on PayARC &mdash; call Juan"
+  },
+  {
+    name: "EPOS Now",
+    processor: "North / PayARC / PayROC (CA)",
+    type: "native",
+    vertical: "Retail / Restaurant / Hospitality",
+    notes: "Works in both US and Canada. US: North or PayARC. Canada: PayROC or Nuvei. Great option if merchant needs new hardware.",
+    action: "US: North or PayARC | Canada: PayROC or Nuvei"
+  },
+  {
+    name: "SwipeSimple",
+    processor: "North / PayARC",
+    type: "native",
+    vertical: "Any / Mobile",
+    notes: "Simple mobile/tablet POS. Works natively with North and PayARC.",
+    action: "Board on North or PayARC"
+  },
+
+  // ─── UNSUPPORTED / COMPETITOR ───
+  {
+    name: "Square",
+    processor: "❌ Not Available",
+    type: "unsupported",
+    vertical: "Retail / Restaurant / Any",
+    notes: "Closed ecosystem + flat rate. AllProPay does not compete. If merchant is doing significant volume ($10k+/mo), explain interchange-plus savings &mdash; but you can't replace their Square POS.",
+    action: "Explain value prop or move on &mdash; can't replace Square POS"
+  },
+
+  // ─── GATEWAY LAYER ───
+  {
+    name: "Lightspeed",
+    processor: "North / PayARC via Authorize.net",
+    type: "gateway",
+    vertical: "Retail / Restaurant",
+    notes: "Multiple products (Restaurant, Retail, Golf). Supports Authorize.net as gateway. POS+ may also work depending on version. Confirm which product first.",
+    action: "Use Authorize.net gateway &mdash; board on North or PayARC"
+  },
+  {
+    name: "Revel Systems",
+    processor: "North / PayARC via Authorize.net",
+    type: "gateway",
+    vertical: "Restaurant / Retail",
+    notes: "iPad-based POS. Supports Authorize.net natively as gateway option. POS+ also possible.",
+    action: "Use Authorize.net gateway &mdash; board on North or PayARC"
+  },
+  {
+    name: "WooCommerce",
+    processor: "North / PayARC via Authorize.net",
+    type: "gateway",
+    vertical: "eCommerce",
+    notes: "WordPress-based eCommerce. Authorize.net plugin available. Board on North or PayARC as backend.",
+    action: "Use Authorize.net gateway &mdash; board on North or PayARC"
+  },
+  {
+    name: "Magento / Adobe Commerce",
+    processor: "North / PayARC via Authorize.net",
+    type: "gateway",
+    vertical: "eCommerce",
+    notes: "Supports Authorize.net natively. Board on North or PayARC as backend processor.",
+    action: "Use Authorize.net gateway &mdash; board on North or PayARC"
+  },
+
+  // ─── POS+ INTEGRATIONS ───
+  // Auto Repair
+  {
+    name: "AutoLeap",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Auto Repair",
+    notes: "Growing auto shop management platform. POS+ integration keeps their workflow intact.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Shopboss",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Auto Repair",
+    notes: "Auto repair shop software. POS+ handles payment integration.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Shopmonkey",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Auto Repair",
+    notes: "Popular in US independent auto shops.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "TekMetric",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Auto Repair",
+    notes: "Common in independent auto repair shops.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Dental
+  {
+    name: "Dentrix",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Dental",
+    notes: "Most common dental software in the US. Huge install base. Strong selling point.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Dentrix Ascend",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Dental",
+    notes: "Cloud version of Dentrix.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Eaglesoft",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Dental",
+    notes: "Popular in smaller dental practices.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Open Dental",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Dental",
+    notes: "Open source dental practice management. Common in independent practices.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Denticon",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Dental",
+    notes: "Focus on group dental practices.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Curve Dental",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Dental",
+    notes: "Cloud-based dental software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "AsproDental",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Dental",
+    notes: "Dental practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Medical
+  {
+    name: "DrChrono",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "EHR with integrated billing. Popular with independent physicians.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "AdvancedMD",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "Full practice management suite. Larger practices.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "ModMed",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "Specialty: dermatology. EHR + practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Practice Fusion",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "EHR for small/independent practices.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Experity Health",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Urgent Care",
+    notes: "Urgent care workflow and billing.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "RXNT",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "Medical practice management and e-prescribing.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Insync Healthcare Solutions",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "EHR and practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Collaborate MD",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "Medical billing software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "CoreBridge",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "Healthcare management platform.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "ClinicHQ",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Medical / Healthcare",
+    notes: "Clinic scheduling and management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Qualifacts",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Behavioral Health",
+    notes: "Behavioral health and human services software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "WellSky",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Home Health",
+    notes: "Home health and care management platform.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Mental Health / Therapy
+  {
+    name: "Simple Practice",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Mental Health / Therapy",
+    notes: "Very popular with solo and group therapists. Big install base.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Therapy Notes",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Mental Health / Therapy",
+    notes: "Notes and billing for therapists.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Optometry / Audiology
+  {
+    name: "EyeFinity",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Optometry",
+    notes: "Practice management for optometrists.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "CounselEAR",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Audiology",
+    notes: "Audiology practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Sycle",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Audiology",
+    notes: "Audiology practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Chiropractic
+  {
+    name: "Chirotouch",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Chiropractic",
+    notes: "Most popular chiropractic practice management software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "ChiroHD",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Chiropractic",
+    notes: "Chiropractic practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Chirocat",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Chiropractic",
+    notes: "Chiropractic software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Veterinary
+  {
+    name: "Avimark",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Veterinary",
+    notes: "Common vet practice software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "CovetrusPulse / eVet",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Veterinary",
+    notes: "Large vet group platform. Also covers eVet.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "DaySmart Vet",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Veterinary",
+    notes: "Also known as Vetter. Veterinary practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Digitail",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Veterinary",
+    notes: "Modern cloud-based vet software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Hippo Manager",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Veterinary",
+    notes: "Cloud veterinary practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Impromed",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Veterinary",
+    notes: "Veterinary practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "NaVetor",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Veterinary",
+    notes: "Cloud-based veterinary software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Shepherd",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Veterinary",
+    notes: "Modern veterinary practice management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Groomsoft",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Pet Grooming",
+    notes: "Pet grooming salon software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Home Services / Trades
+  {
+    name: "HouseCallPro",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Home Services",
+    notes: "Very popular with HVAC, plumbing, cleaning. Field service management.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Jobber",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Home Services",
+    notes: "Popular field service platform. Landscaping, cleaning, HVAC.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Service Titan",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Home Services / Trades",
+    notes: "Enterprise platform for HVAC, plumbing, electrical. Large install base.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "JobNimbus",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Roofing / Contractors",
+    notes: "CRM and project management for roofers and contractors.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Legal
+  {
+    name: "Clio",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Legal",
+    notes: "Most popular law firm management software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Construction / Property
+  {
+    name: "Viewpoint Vista",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Construction",
+    notes: "Construction ERP software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Buildium",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Property Management",
+    notes: "Property management platform.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Transportation
+  {
+    name: "Limo Anywhere",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Transportation / Limo",
+    notes: "Limo and car service dispatch software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Accounting / ERP
+  {
+    name: "Quickbooks",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Accounting",
+    notes: "Extremely common. Highlight seamless integration &mdash; merchants love this. QB Desktop and QB Online both work.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Xero",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Accounting",
+    notes: "Popular with Canadian businesses. Cloud accounting.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Freshbooks",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Accounting",
+    notes: "Small business invoicing and accounting.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Wave",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Accounting",
+    notes: "Free accounting software. Small businesses.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Invoice Simple",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Invoicing",
+    notes: "Simple invoicing app for small businesses and contractors.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Sage Intacct",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Accounting / ERP",
+    notes: "Cloud accounting for mid-market businesses.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Netsuite",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "ERP",
+    notes: "Oracle cloud ERP. Larger businesses.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Acumatica",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "ERP",
+    notes: "Cloud ERP platform.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Microsoft Dynamics",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "ERP",
+    notes: "Enterprise ERP/CRM. Larger businesses.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Epicor Prophet 21",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Distribution / ERP",
+    notes: "ERP for distribution businesses.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+  {
+    name: "Zoho",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "CRM / Accounting",
+    notes: "CRM and accounting suite. Zoho Books, Zoho CRM.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Fitness / Wellness
+  {
+    name: "MindBody",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Fitness / Wellness",
+    notes: "Studios, gyms, spas, salons. Very common.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Education
+  {
+    name: "Gradelink",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Education",
+    notes: "K-12 school management and billing.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Physical Therapy
+  {
+    name: "WebPT",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Physical Therapy",
+    notes: "Most popular PT practice management software.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // eCommerce
+  {
+    name: "Shopware",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "eCommerce",
+    notes: "eCommerce platform, primarily European market.",
+    action: "Install POS+ &mdash; board on North or PayARC"
+  },
+
+  // Heartland (special case)
+  {
+    name: "Heartland POS",
+    processor: "North / PayARC",
+    type: "posplus",
+    vertical: "Restaurant / Retail",
+    notes: "⚠️ Heartland is also a processor (competitor). Merchant has Heartland POS? Use POS+ to keep their software but move processing to AllProPay. Pitch: 'Keep what you have, stop overpaying Heartland on processing.'",
+    action: "Install POS+ &mdash; board on North or PayARC (steal the processing from Heartland)"
+  },
+];
+
+let activeFilter = "all";
+let searchQuery = "";
+
+function highlight(text, query) {
+  if (!query) return text;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark class="highlight">$1</mark>');
+}
+
+function renderCards(data) {
+  const container = document.getElementById('results');
+  const countEl = document.getElementById('results-count');
+
+  if (data.length === 0) {
+    container.innerHTML = `
+      <div class="no-results">
+        <h3>No results found</h3>
+        <p>Try a different name, or check if the POS uses Authorize.net as a gateway.</p>
+      </div>`;
+    countEl.textContent = '';
+    return;
+  }
+
+  countEl.textContent = `${data.length} result${data.length !== 1 ? 's' : ''}`;
+
+  const q = searchQuery.toLowerCase();
+
+  container.innerHTML = data.map(pos => {
+    const typeLabel = {
+      native: "Native",
+      posplus: "POS+",
+      gateway: "Gateway",
+      unsupported: "Not Supported"
+    }[pos.type];
+
+    const badgeClass = {
+      native: "badge-native",
+      posplus: "badge-posplus",
+      gateway: "badge-gateway",
+      unsupported: "badge-unsupported"
+    }[pos.type];
+
+    const actionClass = {
+      native: "action-native",
+      posplus: "action-posplus",
+      gateway: "action-gateway",
+      unsupported: "action-unsupported"
+    }[pos.type];
+
+    return `
+      <div class="card ${pos.type}">
+        <div class="card-header">
+          <div class="pos-name">${highlight(pos.name, searchQuery)}</div>
+          <span class="badge ${badgeClass}">${typeLabel}</span>
+        </div>
+        <div class="card-processor">${highlight(pos.processor, searchQuery)}</div>
+        <div class="card-vertical">${pos.vertical}</div>
+        <div class="card-notes">${highlight(pos.notes, searchQuery)}</div>
+        <span class="card-action ${actionClass}">&rarr; ${pos.action}</span>
+      </div>`;
+  }).join('');
+}
+
+function filterAndRender() {
+  let data = POS_DATA;
+
+  if (activeFilter !== "all") {
+    data = data.filter(p => p.type === activeFilter);
+  }
+
+  if (searchQuery.trim()) {
+    const q = searchQuery.toLowerCase();
+    data = data.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.processor.toLowerCase().includes(q) ||
+      p.vertical.toLowerCase().includes(q) ||
+      p.notes.toLowerCase().includes(q)
+    );
+  }
+
+  // Sort: native first, then posplus, gateway, unsupported
+  const order = { native: 0, posplus: 1, gateway: 2, unsupported: 3 };
+  data.sort((a, b) => order[a.type] - order[b.type] || a.name.localeCompare(b.name));
+
+  renderCards(data);
+}
+
+// Search input
+document.getElementById('search').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  filterAndRender();
+});
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    filterAndRender();
+  });
+});
+
+// Initial render
+filterAndRender();
+
+// Auto-focus search on load
+window.addEventListener('load', () => {
+  document.getElementById('search').focus();
+});
+</script>
+</body>
+</html>
